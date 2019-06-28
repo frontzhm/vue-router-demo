@@ -4,7 +4,7 @@
 npm i
 npm run serve
 ```
-main.js那边修改`isLogin = false`可以看到进不去profile
+登录状态根据login页面的 选中状态
 
 ## 需求：
 

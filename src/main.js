@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-
+localStorage.isLogin = '1'
 Vue.config.productionTip = false
 // 这边手动控制
-const isLogin = true
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.needLogin)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
+    const isLogin = localStorage.isLogin === '1'
     if (!isLogin) {
       next({
         path: '/login',
