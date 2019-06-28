@@ -1,5 +1,7 @@
 # vue-router-demo
 
+[看效果](http://120.79.52.223:3334/)
+
 ```shell
 npm i
 npm run serve
@@ -38,24 +40,43 @@ npm run serve
 * 在router那边增加`beforeEach`钩子
 
 ```js
+// main.js
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.needLogin)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!isLogin) {
+      next({
+        path: '/login',
+        // 方便登录之后返回来
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+
 // router.js
  {
-      path: '/user',
-      name: 'user',
-      component: () => import(/* webpackChunkName: "user" */ './views/User.vue'),
-      children: [
-        {
-          path: 'create-user',
-          alias: '',
-          component: () => import(/* webpackChunkName: "createUser" */ './views/CreateUser.vue')
-        },
-        {
-          path: 'user-list',
-          component: () => import(/* webpackChunkName: "userList" */ './views/UserList.vue')
-        }
-      ],
-      meta: {
-        needLogin: true
-      }
+  path: '/user',
+  name: 'user',
+  component: () => import(/* webpackChunkName: "user" */ './views/User.vue'),
+  children: [
+    {
+      path: 'create-user',
+      alias: '',
+      component: () => import(/* webpackChunkName: "createUser" */ './views/CreateUser.vue')
     },
+    {
+      path: 'user-list',
+      component: () => import(/* webpackChunkName: "userList" */ './views/UserList.vue')
+    }
+  ],
+  meta: {
+    needLogin: true
+  }
+}
 ```
